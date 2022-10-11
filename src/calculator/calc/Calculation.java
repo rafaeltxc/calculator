@@ -1,5 +1,6 @@
 package calculator.calc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Calculation {	
@@ -21,11 +22,6 @@ public class Calculation {
 				}
 			}
 		}
-		return lst;
-	}
-	
-	public List<String> verifParenthesis(List<String> lst) {
-		
 		return lst;
 	}
 	
@@ -74,6 +70,27 @@ public class Calculation {
 			lst.add(0, Float.toString(result));
 		}
 		return result;
+	}
+	
+	public List<String> verifParenthesis(List<String> lst) {
+		if(lst.contains("(")) {
+			int indexStart = lst.indexOf("(");
+			int indexEnd = lst.lastIndexOf(")");
+			List<String> temp = new ArrayList<>();
+			float result;
+			
+			lst.remove(indexEnd);
+			lst.remove(indexStart);
+			for(int i=0; i<indexEnd-indexStart-1; i++) {
+				temp.add(lst.get(indexStart));
+				lst.remove(indexStart);
+			}
+			
+			temp = verifParenthesis(temp);
+			result = operations(temp);
+			lst.add(indexStart, String.valueOf(result));
+		}
+		return lst;
 	}
 	
 	public float result(List<String> lst) {
