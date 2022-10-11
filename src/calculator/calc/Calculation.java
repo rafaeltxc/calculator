@@ -1,6 +1,5 @@
 package calculator.calc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Calculation {	
@@ -12,6 +11,22 @@ public class Calculation {
 		} catch (NumberFormatException e) {
 			return false;
 		}
+	}
+	
+	public List<String> addMultplicationOperation(List<String> lst) {
+		for(int i=0; i<lst.size(); i++) {
+			if(lst.get(i).equals("(") && i != 0) {
+				if(verifNumber(lst.get(i-1))) {
+					lst.add(i, "*");
+				}
+			}
+		}
+		return lst;
+	}
+	
+	public List<String> verifParenthesis(List<String> lst) {
+		
+		return lst;
 	}
 	
 	public float operations(List<String> lst) {
@@ -58,54 +73,16 @@ public class Calculation {
 			
 			lst.add(0, Float.toString(result));
 		}
-		
-		try {
-			if(lst.size() == 1) {
-				result = Float.valueOf(lst.get(0)).floatValue();
-				return result;
-			}
-		} catch(Exception e) {
-			System.out.println("The length of the list is higher than one");
-		}
-		return 0;
+		return result;
 	}
 	
 	public float result(List<String> lst) {
-		for(int i=0; i<lst.size(); i++) {
-			if(lst.get(i).equals("(") && i != 0) {
-				if(verifNumber(lst.get(i-1)) == true) {
-					lst.add(i, "*");
-				}
-			}
-		}
-		
-		int indexStart = 0;
-		int indexFinal = 0;
-		
-		float result = 0f;
-		
-		List<String> temp = new ArrayList<String>();
-		
-		while(lst.contains("(")) {
-			indexStart = lst.indexOf("(");
-			indexFinal = lst.indexOf(")");
-			
-			for(int i=indexStart; i<=indexFinal; i++) {
-				if(i != indexStart && i != indexFinal) {
-					temp.add(lst.get(indexStart));
-				}
-				lst.remove(indexStart);
-			}
-			
-			result = operations(temp);
-			lst.add(indexStart, Float.toString(result));
-			
-		}
-		
+		float result = 0;
 		if(lst.size() > 0) {
 			result = operations(lst);
+		} else {
+			return 0;
 		}
-		
 		return result;
 	}
 }

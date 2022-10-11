@@ -14,6 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import calculator.calc.Calculation;
+import calculator.input.UserInput;
+
 public class Frame extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -32,18 +35,18 @@ public class Frame extends JFrame implements ActionListener {
 		int fieldWidth = width-10, fieldHeight = (int) (height * 0.15);
 		//rows, columns and spaces between
 		int nmRows = 4, nmCol = 3, fnRows = 4, fnCol = 2, spaceBt = 5;
-		//numbers division
+		//numbers section
 		int nmWidth = (int) (width * 0.65), nmHeightEnd = height-fieldHeight-(nmRows*spaceBt)-50;
-		//operations division
+		//operations section
 		int fnWidthStart = nmWidth+10, nmWidthEnd = width-nmWidth-(nmCol*spaceBt), fnHeightEnd = height-fieldHeight-(nmRows*spaceBt)-50;
-		
+		//---------------------------------------------------
 		JFrame frame = new JFrame("Calculator");
 		frame.setVisible(true);
 		frame.getContentPane().setBackground(Color.black);
 		frame.setSize(width, height);
 		frame.setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		//---------------------------------------------------
 		field = new JTextField();
 		field.setBounds(5, 5, fieldWidth, fieldHeight);
 		field.setBackground(Color.black);
@@ -51,17 +54,17 @@ public class Frame extends JFrame implements ActionListener {
 		field.setFont(new Font("Courier", Font.PLAIN, 20));
 		field.setForeground(Color.white);
 		frame.add(field);
-		
+		//---------------------------------------------------
 		numbers = new ArrayList<JButton>();
-		
 		JButton percOpen = new JButton("(");
 		JButton percClose = new JButton(")");
-		numbers.add(percOpen);
-		numbers.add(percClose);
 		
 		for(int i=9; i>=0; i--) {
 			numbers.add(new JButton(String.valueOf(i)));
 		}
+		
+		numbers.add(percOpen);
+		numbers.add(percClose);
 		
 		for(int i=0; i<numbers.size(); i++) {
 			numbers.get(i).addActionListener(this);
@@ -81,16 +84,16 @@ public class Frame extends JFrame implements ActionListener {
 		}
 		
 		frame.add(nbPanel);
-		
+		//---------------------------------------------------
 		functions = new ArrayList<JButton>();
 		functions.add(new JButton("Del"));
-		functions.add(new JButton("="));
+		functions.add(new JButton("Clr"));
 		functions.add(new JButton("+"));
 		functions.add(new JButton("-"));
 		functions.add(new JButton("x"));
 		functions.add(new JButton("/"));
-		functions.add(new JButton("%"));
 		functions.add(new JButton("."));
+		functions.add(new JButton("Equ"));
 		
 		for(int i=0; i<functions.size(); i++) {
 			functions.get(i).addActionListener(this);
@@ -129,7 +132,21 @@ public class Frame extends JFrame implements ActionListener {
 						field.setText(expression.substring(0, expression.length()-1));
 						break;
 					}
-				} else if(functions.get(i).getText().equals("=")) {
+				} else if(functions.get(i).getText().equals("Clr")) {
+					field.setText("");
+					break;
+				} else if(functions.get(i).getText().equals("Equ")) {
+					UserInput ui = new UserInput();
+					Calculation calc = new Calculation();
+					
+					String input = field.getText().replaceAll("x", "*");
+					if(ui.input(input)) {
+						field.setText("Malformed expression!");
+					} else {
+						List<String> expression = ui.expression(input);
+						float result = calc.result(calc.verifParenthesis(calc.addMultplicationOperation(expression)));
+						field.setText(result + "");
+					}
 					break;
 				}
 				field.setText(field.getText().concat(String.valueOf(functions.get(i).getText())));

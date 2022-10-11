@@ -9,40 +9,22 @@ import java.util.regex.Pattern;
 
 public class UserInput {
 
-	private Scanner sc = new Scanner(System.in);
-	
-	public String input() {	
-		System.out.println("Insert your calc");
-		String stringInput = sc.nextLine();
+	public boolean input(String st) {	
 
 		String regex = ".*[a-zA-Z].*";
 		Pattern pt = Pattern.compile(regex);
-		Matcher mt = pt.matcher(stringInput);
+		Matcher mt = pt.matcher(st);
 		boolean matches = mt.matches();
-		
-		while(matches == true) {
-			System.out.println("Invalid operation!");
-			stringInput = sc.nextLine();
-			
-			mt = pt.matcher(stringInput);
-			matches = mt.matches();
+		if(matches) {
+			return true;
+		} else {
+			return false;
 		}
-		
-		sc.close();
-		return stringInput;
 	}
 	
 	public List<String> expression(String st) {
-		String finalWord = "";
-
-		for(int i=0; i<st.length(); i++) {
-			if(st.charAt(i) != ' ') {
-				finalWord += st.charAt(i);
-			}
-		}
-		
         String regex = "(?<=[-+*/()])|(?=[-+*/()])";
-		List<String> lst = new ArrayList<String>(Arrays.asList(finalWord.split(regex)));
+		List<String> lst = new ArrayList<String>(Arrays.asList(st.split(regex)));
         return lst;
 	}
 	
